@@ -41,7 +41,7 @@ def test_elastic_scc_absent_if_elastic_disabled(kube_version):
     supported_k8s_versions,
 )
 def test_elastic_scc_absent_if_scc_disabled(kube_version):
-    """elastic SecurityContextConstraint should disable if sccEnabled is False"""
+    """elastic SecurityContextConstraint should disable if elastic is disabled"""
     docs = render_chart(
 	kube_version=kube_version,
 	values={"global": {"sccEnabled": False, "elasticsearchEnabled": True}},
