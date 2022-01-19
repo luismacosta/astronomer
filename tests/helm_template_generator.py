@@ -71,6 +71,7 @@ def render_chart(
     chart_dir=None,
     kube_version="1.18.0",
     baseDomain="example.com",
+    skip_schema_validation=False,
 ):
     """
     Render a helm chart into dictionaries. For helm chart testing only
@@ -120,8 +121,9 @@ def render_chart(
             raise
         k8s_objects = yaml.full_load_all(templates)
         k8s_objects = [k8s_object for k8s_object in k8s_objects if k8s_object]  # type: ignore
-        for k8s_object in k8s_objects:
-            validate_k8s_object(k8s_object, kube_version=kube_version)
+        if not skip_schema_validation:
+            for k8s_object in k8s_objects:
+                validate_k8s_object(k8s_object, kube_version=kube_version)
         return k8s_objects
 
 
