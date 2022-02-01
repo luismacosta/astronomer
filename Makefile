@@ -66,12 +66,8 @@ update-requirements: ## Update all requirements.txt files
 	for FILE in requirements/*.in ; do pip-compile --quiet --generate-hashes --allow-unsafe --upgrade $${FILE} ; done ;
 	-pre-commit run requirements-txt-fixer --all-files --show-diff-on-failure
 
-.PHONY: show-referenced-airflow-docker-images
-show-referenced-airflow-docker-images: ## Show all docker images and versions used in the helm chart
-	bin/list-airflow-chart-images.sh
-
 .PHONY: show-docker-images
-show-docker-images: ## Show all docker images and versions used in the helm chart - does not include airflow images
+show-docker-images: ## Show all docker images and versions used in the helm chart
 	@helm template . \
 		--set global.baseDomain=foo.com \
 		--set global.blackboxExporterEnabled=True \
@@ -83,7 +79,3 @@ show-docker-images: ## Show all docker images and versions used in the helm char
 		--set global.veleroEnabled=True \
 		2>/dev/null \
 		| awk '/image: / {match($$2, /(([^"]*):[^"]*)/, a) ; printf "https://%s %s\n", a[2], a[1] ;}' | sort -u | column -t
-
-.PHONY: show-extended-docker-images
-show-extended-docker-images: ## Show all docker images directly used by this chart
-	bin/list-all-docker-images.sh
