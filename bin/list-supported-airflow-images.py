@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import json
 import yaml
 import urllib.request
 import semver
@@ -10,10 +11,9 @@ airflow_releases_url = "https://updates.astronomer.io/astronomer-certified"
 airflow_images_tags_url = "https://quay.io/v1/repositories/astronomer/ap-airflow/tags"
 
 # see https://docs.astronomer.io/enterprise/ac-support-policy/#end-of-maintenance-date
-published_eol_dates = [
-    {"major": 2, "minor": 0, "published_eol": "2022-02-28T23:59:59+00:00"},
-    {"major": 2, "minor": 1, "published_eol": "2022-11-30T23:59:59+00:00"},
-]
+with open("enterprise_support_data.json") as f:
+    enterprise_support_data = json.load(f)
+published_eol_dates = enterprise_support_data["astronomer_airflow_published_eol_dates"]
 
 # takes release as an argument
 def semver_of(release):

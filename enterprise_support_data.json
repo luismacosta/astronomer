@@ -1,0 +1,14 @@
+{
+  "astronomer_airflow_published_eol_dates": [
+    {
+      "major": 2,
+      "minor": 0,
+      "published_eol": "2022-02-28T23:59:59+00:00"
+    },
+    {
+      "major": 2,
+      "minor": 1,
+      "published_eol": "2022-11-30T23:59:59+00:00"
+    }
+  ]
+}
