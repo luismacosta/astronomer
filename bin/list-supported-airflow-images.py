@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+"""
+This script fetches a list of published ap-airflow images, filters out images
+that have been obsoleted by higher patch-levels, filters out images past their
+end-of-life date, and then outputs a list of image tags suitable for mirroring
+
+It uses end-of-life data from enterprise_support_data.json and a live list of
+published images from api sources. It also sanity-checks tags to make sure they
+exist in the public quay repo so that we know they can be mirrored.
+"""
 import json
 import yaml
 import urllib.request
@@ -36,6 +45,7 @@ def obsoletes(release_a, release_b):
     b = semver_of(release_b)
     if is_same_minor_version(a, b) and a > b:
         return True
+
 
 # whether or not a release is in-support
 def in_support(release):
@@ -138,8 +148,6 @@ def get_supported_airflow_image_tags():
 
 
 supported_current_tags = get_supported_airflow_image_tags()
-image_names = [
-    f"quay.io/astronomer/ap-airflow:{tag}" for tag in supported_current_tags
-]
+image_names = [f"quay.io/astronomer/ap-airflow:{tag}" for tag in supported_current_tags]
 for image_name in image_names:
     print(image_name)
