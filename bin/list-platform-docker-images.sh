@@ -14,4 +14,4 @@ helm template . \
 	--set global.pspEnabled=True \
 	--set global.veleroEnabled=True \
 	2>/dev/null \
-	 | grep 'image: '|cut -d ':' -f 2-|sed 's/^[ \t]*//;s/[ \t]*$//'|sed 's/"//'|sort|uniq
+	 | grep 'image: '|cut -d ':' -f 2-|sed 's/^[ \t]*//;s/[ \t]*$//'|sed 's/"//g'|sort|uniq
