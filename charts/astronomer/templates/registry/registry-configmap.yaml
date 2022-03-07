@@ -35,6 +35,8 @@ data:
       filesystem:
         rootdirectory: /var/lib/registry
     {{- end }}
+      redirect:
+        disable: true
       delete:
         enabled: true
     http:
