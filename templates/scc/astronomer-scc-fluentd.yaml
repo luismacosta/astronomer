@@ -1,0 +1,37 @@
+{{- if .Values.global.sccEnabled }}
+{{- if .Values.global.fluentdEnabled }}
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    release.openshift.io/create-only: "true"
+    "helm.sh/hook": "pre-install,pre-upgrade"
+  name: {{ .Release.Name }}-fluentd
+priority: 15
+allowPrivilegedContainer: true
+readOnlyRootFilesystem: false
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: MustRunAs
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:serviceaccount:{{ .Release.Namespace }}:{{ .Release.Name }}-fluentd
+volumes:
+- configMap
+- hostPath
+- secret
+- projected
+- emptyDir
+fsGroup:
+  type: RunAsAny
+allowHostDirVolumePlugin: true
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+{{- end }}
+{{- end }}
