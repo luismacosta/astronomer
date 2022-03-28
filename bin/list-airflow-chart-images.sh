@@ -15,5 +15,6 @@ embedded_airflow_chart_images=$(helm template "$embedded_airflow_chart_url" \
 	--set airflow.redis.enabled=true \
 	--set airflow.pgbouncer.enabled=true \
 	--set airflow.dags.gitSync.enabled=true \
+	--set airflow.postgresql.enabled=false \
 	| grep 'image: '|cut -d ':' -f 2-|sed 's/^[ \t]*//;s/[ \t]*$//'|sort|uniq)
 echo -e "$embedded_airflow_chart_images"
