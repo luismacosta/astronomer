@@ -5,9 +5,7 @@ import testinfra
 
 from tests.functional_tests.conftest import get_pod_running_containers
 
-container_ignore_list = [
-    "fluentd"
-]
+container_ignore_list = ["fluentd"]
 
 container_list = get_pod_running_containers()
 
