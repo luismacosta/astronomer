@@ -28,6 +28,7 @@ spec:
         prometheus.io/path: /metrics
         prometheus.io/port: "7777"
         prometheus.io/scrape: "true"
+        traffic.sidecar.istio.io/excludeOutboundPorts: "4222"
       {{- end }}
       {{- range $key, $value := .Values.podAnnotations }}
         {{ $key }}: {{ $value | quote }}
