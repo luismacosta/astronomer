@@ -20,6 +20,7 @@ spec:
       release: {{ .Release.Name }}
   policyTypes:
   - Ingress
+  - Egress
   ingress:
   # We allow ingress to all NATs ports
   # from the Astronomer tier.

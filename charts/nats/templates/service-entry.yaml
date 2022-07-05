@@ -11,7 +11,7 @@
 #  {{- end }}
 #spec:
 #  hosts:
-#    - '*.{{ template "nats.name" . }}.{{ .Release.Namespace }}.svc'
+#    - '*'
 #    - {{ template "nats.name" . }}
 #  location: MESH_INTERNAL
 #  ports:
