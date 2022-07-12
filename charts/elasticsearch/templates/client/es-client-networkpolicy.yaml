@@ -31,6 +31,21 @@ spec:
           release: {{ .Release.Name }}
     - podSelector:
         matchLabels:
+          tier: astronomer
+          component: houston-worker
+          release: {{ .Release.Name }}
+    - podSelector:
+        matchLabels:
+          tier: astronomer
+          component: commander
+          release: {{ .Release.Name }}
+    - podSelector:
+        matchLabels:
+          tier: astronomer
+          component: astro-ui
+          release: {{ .Release.Name }}
+    - podSelector:
+        matchLabels:
           tier: logging
           component: fluentd
           release: {{ .Release.Name }}

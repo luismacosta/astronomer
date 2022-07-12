@@ -30,7 +30,6 @@ spec:
         release: {{ .Release.Name }}
       annotations:
         checksum/airflow-chart-version: {{ .Values.airflowChartVersion | sha256sum }}
-        traffic.sidecar.istio.io/excludeInboundPorts: "15020,50051"
     spec:
       nodeSelector:
 {{ toYaml (default .Values.global.platformNodePool.nodeSelector .Values.nodeSelector) | indent 8 }}
