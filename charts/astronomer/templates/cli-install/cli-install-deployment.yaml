@@ -25,6 +25,7 @@ spec:
         component: cli-install
         release: {{ .Release.Name }}
         app: cli-install
+        version: {{ .Chart.Version }}
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/cli-install/cli-install-configmap.yaml") . | sha256sum }}
     spec:

@@ -26,6 +26,7 @@ spec:
         component: houston-worker
         release: {{ .Release.Name }}
         app: houston-worker
+        version: {{ .Chart.Version }}
       annotations:
         checksum/houston-config: {{ include (print $.Template.BasePath "/houston/houston-configmap.yaml") . | sha256sum }}
 #        traffic.sidecar.istio.io/excludeOutboundPorts: "50051,5000,4222,5432"
