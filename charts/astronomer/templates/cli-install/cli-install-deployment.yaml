@@ -24,6 +24,7 @@ spec:
         tier: astronomer
         component: cli-install
         release: {{ .Release.Name }}
+        app: cli-install
       annotations:
         checksum/configmap: {{ include (print $.Template.BasePath "/cli-install/cli-install-configmap.yaml") . | sha256sum }}
     spec:

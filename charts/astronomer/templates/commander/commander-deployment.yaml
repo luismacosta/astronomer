@@ -28,6 +28,7 @@ spec:
         component: commander
         tier: astronomer
         release: {{ .Release.Name }}
+        app: commander
       annotations:
         checksum/airflow-chart-version: {{ .Values.airflowChartVersion | sha256sum }}
     spec:
