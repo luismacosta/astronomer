@@ -148,9 +148,12 @@ jobs:
             - "./*.tgz"
 
   release-to-internal:
-    machine:
-      image: ubuntu-2004:202107-02
+    docker:
+      - image: cimg/base:stable
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - attach_workspace:
           at: /tmp/workspace
       - checkout
@@ -163,9 +166,12 @@ jobs:
             bin/release-helm-chart /tmp/workspace/astronomer-*.tgz
 
   release-to-public:
-    machine:
-      image: ubuntu-2004:202107-02
+    docker:
+      - image: cimg/base:stable
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - attach_workspace:
           at: /tmp/workspace
       - checkout
@@ -179,12 +185,14 @@ jobs:
       - publish-github-release
 {% for version in kube_versions %}
   platform-{{ version | replace(".", "-") }}:
-    machine:
-      image: ubuntu-2004:202107-02
-      resource_class: xlarge
+    docker:
+      - image: cimg/base:stable
     environment:
       KUBE_VERSION: v{{ version }}
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - helm-install:
           astronomer-tags: "platform postgresql monitoring logging"
       - run:

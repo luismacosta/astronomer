@@ -150,9 +150,12 @@ jobs:
             - "./*.tgz"
 
   release-to-internal:
-    machine:
-      image: ubuntu-2004:202107-02
+    docker:
+      - image: cimg/base:stable
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - attach_workspace:
           at: /tmp/workspace
       - checkout
@@ -165,9 +168,12 @@ jobs:
             bin/release-helm-chart /tmp/workspace/astronomer-*.tgz
 
   release-to-public:
-    machine:
-      image: ubuntu-2004:202107-02
+    docker:
+      - image: cimg/base:stable
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - attach_workspace:
           at: /tmp/workspace
       - checkout
@@ -181,12 +187,14 @@ jobs:
       - publish-github-release
 
   platform-1-19-16:
-    machine:
-      image: ubuntu-2004:202107-02
-      resource_class: xlarge
+    docker:
+      - image: cimg/base:stable
     environment:
       KUBE_VERSION: v1.19.16
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - helm-install:
           astronomer-tags: "platform postgresql monitoring logging"
       - run:
@@ -197,12 +205,14 @@ jobs:
             kubent --cluster=false --helm2=false --helm3=false --filename -
           when: always
   platform-1-20-15:
-    machine:
-      image: ubuntu-2004:202107-02
-      resource_class: xlarge
+    docker:
+      - image: cimg/base:stable
     environment:
       KUBE_VERSION: v1.20.15
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - helm-install:
           astronomer-tags: "platform postgresql monitoring logging"
       - run:
@@ -213,12 +223,14 @@ jobs:
             kubent --cluster=false --helm2=false --helm3=false --filename -
           when: always
   platform-1-21-12:
-    machine:
-      image: ubuntu-2004:202107-02
-      resource_class: xlarge
+    docker:
+      - image: cimg/base:stable
     environment:
       KUBE_VERSION: v1.21.12
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - helm-install:
           astronomer-tags: "platform postgresql monitoring logging"
       - run:
@@ -229,12 +241,14 @@ jobs:
             kubent --cluster=false --helm2=false --helm3=false --filename -
           when: always
   platform-1-22-9:
-    machine:
-      image: ubuntu-2004:202107-02
-      resource_class: xlarge
+    docker:
+      - image: cimg/base:stable
     environment:
       KUBE_VERSION: v1.22.9
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - helm-install:
           astronomer-tags: "platform postgresql monitoring logging"
       - run:
@@ -245,12 +259,14 @@ jobs:
             kubent --cluster=false --helm2=false --helm3=false --filename -
           when: always
   platform-1-23-6:
-    machine:
-      image: ubuntu-2004:202107-02
-      resource_class: xlarge
+    docker:
+      - image: cimg/base:stable
     environment:
       KUBE_VERSION: v1.23.6
     steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.11
       - helm-install:
           astronomer-tags: "platform postgresql monitoring logging"
       - run:
