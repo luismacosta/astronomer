@@ -1,6 +1,7 @@
 from tests.chart_tests.helm_template_generator import render_chart
 import pytest
 from tests import supported_k8s_versions
+from tests import validate_prometheus_config
 import yaml
 
 
@@ -44,7 +45,7 @@ class TestPrometheusConfigConfigmap:
             },
         )[0]
 
-        # config_yaml = doc["data"]["config"]
+        validate_prometheus_config(doc["data"]["config"])
         config_yaml = yaml.safe_load(doc["data"]["config"])
         targets = [
             x["static_configs"][0]["targets"]

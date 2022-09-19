@@ -20,6 +20,8 @@ import subprocess
 import docker
 import pytest
 from filelock import FileLock
+import shutil
+import subprocess
 
 from tests import git_root_dir
 
