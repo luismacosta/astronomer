@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 from pathlib import Path
 import platform
 
-uname_map = {
+metadata_map = {
     "Linux": "linux",
     "Windows": "windows",
     "Darwin": "darwin",
@@ -31,26 +31,27 @@ git_root_dir = Path(git_repo.git.rev_parse("--show-toplevel"))
 supported_k8s_versions = ["1.19.0", "1.20.0", "1.21.0", "1.22.0", "1.23.0"]
 
 
-def validate_prometheus_config(config):
-    """Takes the contents of a prometheus configuration file and validates it using promtool."""
+def validate_prometheus_config(config: str):
+    """Takes the contents of the prometheus configuration file and validates it using promtool."""
 
-    promtool = shutil.which("promtool")
+    promtool = shutil.which("promtoolx")
     if not promtool:
-        machine = uname_map[platform.machine()]
-        system = uname_map[platform.system()]
+        machine = metadata_map[platform.machine()]
+        system = metadata_map[platform.system()]
         url = f"https://github.com/prometheus/prometheus/releases/download/v2.37.1/prometheus-2.37.1.{system}-{machine}.tar.gz"
         print(
-            f"promtool command not found. Attempting to download from {url} (NOT IMPLEMENTED)"
+            f"promtool command not found. Please run `make unittest-requirements` or install it from {url}."
         )
+        raise SystemExit(1)
 
     # https://github.com/prometheus/prometheus/releases
     with NamedTemporaryFile(delete=False) as tmp_file:
+
         tmp_file.write(config.encode())
         tmp_file.flush()
         res = subprocess.check_output(
-            f"{promtool} check config {tmp_file.name}".split()
+            f"{promtool} check config --syntax-only {tmp_file.name}".split()
         )
-        breakpoint()
         print("Fin")
 
 

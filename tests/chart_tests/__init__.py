@@ -12,7 +12,9 @@ def get_all_features():
     )
 
 
-def get_chart_containers(k8s_version, chart_values, ignore_kind_list=[]):
+def get_chart_containers(k8s_version, chart_values, ignore_kind_list=None):
+    if ignore_kind_list is None:
+        ignore_kind_list = []
     docs = render_chart(
         kube_version=k8s_version,
         values=chart_values,
@@ -30,7 +32,7 @@ def get_chart_containers(k8s_version, chart_values, ignore_kind_list=[]):
         if kind.lower() not in ignore_kind_list:
             name = spec["name"]
             for container in spec["containers"]:
-                key = k8s_version + "_" + name + "_" + container["name"]
+                key = f"{k8s_version}_{name}_{container['name']}"
                 container["key"] = key
                 container["kind"] = kind
                 container_configs[key] = container
