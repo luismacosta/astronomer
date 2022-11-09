@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
-"""
-This script is used to create the circle config file
-so that we can stay DRY.
-"""
+"""This script is used to create the circle config file so that we can stay
+DRY."""
 import os
 import subprocess
 from pathlib import Path
@@ -13,7 +11,7 @@ from jinja2 import Template
 # recent patch version on Dockerhub
 # https://hub.docker.com/r/kindest/node/tags
 # This should match what is in tests/__init__.py
-KUBE_VERSIONS = ["1.19.16", "1.20.15", "1.21.12", "1.22.9", "1.23.6"]
+KUBE_VERSIONS = ["1.21.14", "1.22.15", "1.23.13", "1.24.7"]
 # https://circleci.com/docs/2.0/building-docker-images/#docker-version
 CI_REMOTE_DOCKER_VERSION = "20.10.14"
 
@@ -27,7 +25,7 @@ def list_docker_images(path):
 
 
 def main():
-    """Render the Jinja2 template file"""
+    """Render the Jinja2 template file."""
     project_directory = Path(__file__).parent.parent
     circle_directory = os.path.dirname(os.path.realpath(__file__))
     config_template_path = os.path.join(circle_directory, "config.yml.j2")

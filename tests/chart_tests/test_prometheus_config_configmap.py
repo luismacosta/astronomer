@@ -3,6 +3,7 @@ import pytest
 from tests import supported_k8s_versions
 from tests import validate_prometheus_config
 import yaml
+import jmespath
 
 
 @pytest.mark.parametrize(
@@ -28,7 +29,8 @@ class TestPrometheusConfigConfigmap:
         assert doc["metadata"]["name"] == "release-name-prometheus-config"
 
     def test_prometheus_config_configmap_with_different_name_and_ns(self, kube_version):
-        """Validate the prometheus config configmap does not conflate deployment name and namespace."""
+        """Validate the prometheus config configmap does not conflate
+        deployment name and namespace."""
         doc = render_chart(
             name="foo-name",
             namespace="bar-ns",
@@ -69,7 +71,8 @@ class TestPrometheusConfigConfigmap:
         assert all(x in targets for x in target_checks)
 
     def test_prometheus_config_configmap_external_labels(self, kube_version):
-        """Prometheus should have an external_labels section in config.yaml when external_labels is specified in helm values."""
+        """Prometheus should have an external_labels section in config.yaml
+        when external_labels is specified in helm values."""
         doc = render_chart(
             kube_version=kube_version,
             show_only=self.show_only,
@@ -88,7 +91,8 @@ class TestPrometheusConfigConfigmap:
         }
 
     def test_promethesu_config_configmap_remote_write(self, kube_version):
-        """Prometheus should have a remote_write section in config.yaml when remote_write is specified in helm values."""
+        """Prometheus should have a remote_write section in config.yaml when
+        remote_write is specified in helm values."""
         doc = render_chart(
             kube_version=kube_version,
             show_only=self.show_only,
@@ -127,7 +131,8 @@ class TestPrometheusConfigConfigmap:
         ]
 
     def test_prometheus_config_configmap_with_node_exporter(self, kube_version):
-        """Validate the prometheus config configmap has the node-exporter enabled with params."""
+        """Validate the prometheus config configmap has the node-exporter
+        enabled with params."""
         doc = render_chart(
             name="foo-name",
             namespace="bar-ns",
@@ -148,7 +153,8 @@ class TestPrometheusConfigConfigmap:
         assert nodeExporterConfigs[0]["job_name"] == "node-exporter"
 
     def test_prometheus_config_configmap_without_node_exporter(self, kube_version):
-        """Validate the prometheus config configmap does not have node-exporter when it is not enabled."""
+        """Validate the prometheus config configmap does not have node-exporter
+        when it is not enabled."""
         doc = render_chart(
             name="foo-name",
             namespace="bar-ns",
@@ -164,3 +170,52 @@ class TestPrometheusConfigConfigmap:
         config_yaml = yaml.safe_load(doc["data"]["config"])
         job_names = [x["job_name"] for x in config_yaml["scrape_configs"]]
         assert "node-exporter" not in job_names
+
+    def test_prometheus_config_release_relabel(self, kube_version):
+        """Prometheus should have a regex for release name."""
+        doc = render_chart(
+            kube_version=kube_version,
+            show_only=self.show_only,
+            values={
+                "astronomer": {
+                    "houston": {
+                        "config": {"deployments": {"namespaceFreeFormEntry": False}},
+                    },
+                },
+            },
+        )[0]
+
+        config = yaml.safe_load(doc["data"]["config"])
+        scrape_config_search_result = jmespath.search(
+            "scrape_configs[?job_name == 'kube-state']", config
+        )
+        metric_relabel_config_search_result = jmespath.search(
+            "metric_relabel_configs[?target_label == 'release']",
+            scrape_config_search_result[0],
+        )
+        assert metric_relabel_config_search_result[0]["regex"] == "^default-(.*$)"
+        assert metric_relabel_config_search_result[0]["replacement"] == "$1"
+
+    def test_prometheus_config_release_relabel_with_free_from_namespace(
+        self, kube_version
+    ):
+        """Prometheus should not have a regex for release name when free form
+        namespace is enabled."""
+        doc = render_chart(
+            kube_version=kube_version,
+            show_only=self.show_only,
+            values={
+                "global": {"namespaceFreeFormEntry": True},
+            },
+        )[0]
+
+        config = yaml.safe_load(doc["data"]["config"])
+        scrape_config_search_result = jmespath.search(
+            "scrape_configs[?job_name == 'kube-state']", config
+        )
+        metric_relabel_config_search_result = jmespath.search(
+            "metric_relabel_configs[?target_label == 'release']",
+            scrape_config_search_result[0],
+        )
+        assert "regex" not in metric_relabel_config_search_result[0]
+        assert "replacement" not in metric_relabel_config_search_result[0]

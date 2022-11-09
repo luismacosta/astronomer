@@ -42,9 +42,9 @@ def get_schema_k8s(api_version, kind, kube_version="1.21.0"):
     if "/" in api_version:
         ext, _, api_version = api_version.partition("/")
         ext = ext.split(".")[0]
-        url = f"{BASE_URL_SPEC}/v{kube_version}-standalone/{kind}-{ext}-{api_version}.json"
+        url = f"{BASE_URL_SPEC}/v{kube_version}-standalone-strict/{kind}-{ext}-{api_version}.json"
     else:
-        url = f"{BASE_URL_SPEC}/v{kube_version}-standalone/{kind}-{api_version}.json"
+        url = f"{BASE_URL_SPEC}/v{kube_version}-standalone-strict/{kind}-{api_version}.json"
     request = requests.get(url)
     request.raise_for_status()
     return request.json()
@@ -75,8 +75,9 @@ def render_chart(
     baseDomain: str = "example.com",
     namespace: Optional[str] = None,
 ):
-    """
-    Render a helm chart into dictionaries. For helm chart testing only.
+    """Render a helm chart into dictionaries.
+
+    For helm chart testing only.
     """
     values = values or {}
     chart_dir = chart_dir or sys.path[0]
@@ -130,8 +131,8 @@ def render_chart(
 
 
 def prepare_k8s_lookup_dict(k8s_objects) -> Dict[Tuple[str, str], Dict[str, Any]]:
-    """
-    Helper to create a lookup dict from k8s_objects.
+    """Helper to create a lookup dict from k8s_objects.
+
     The keys of the dict are the k8s object's kind and name
     """
     return {
@@ -141,7 +142,8 @@ def prepare_k8s_lookup_dict(k8s_objects) -> Dict[Tuple[str, str], Dict[str, Any]
 
 
 def render_k8s_object(obj, type_to_render):
-    """
-    Function that renders dictionaries into k8s objects. For helm chart testing only.
+    """Function that renders dictionaries into k8s objects.
+
+    For helm chart testing only.
     """
     return api_client._ApiClient__deserialize_model(obj, type_to_render)

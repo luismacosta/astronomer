@@ -19,24 +19,24 @@ images:
     pullPolicy: IfNotPresent
   registry:
     repository: quay.io/astronomer/ap-registry
-    tag: 3.16.2
+    tag: 3.16.2-1
     pullPolicy: IfNotPresent
     # httpSecret: ~
   houston:
     repository: quay.io/astronomer/ap-houston-api
-    tag: 0.30.19
+    tag: 0.31.4
     pullPolicy: IfNotPresent
   astroUI:
     repository: quay.io/astronomer/ap-astro-ui
-    tag: 0.30.3
+    tag: 0.31.1
     pullPolicy: IfNotPresent
   dbBootstrapper:
     repository: quay.io/astronomer/ap-db-bootstrapper
-    tag: 0.26.9
+    tag: 0.26.11
     pullPolicy: IfNotPresent
   cliInstall:
     repository: quay.io/astronomer/ap-cli-install
-    tag: 0.26.8
+    tag: 0.26.9
     pullPolicy: IfNotPresent
 
 astroUI:
@@ -142,7 +142,7 @@ houston:
     # Enable expire deployments CronJob
     enabled: false
 
-    # Default here is to run at midnight every night
+    # Default here is to run at midnight every night https://crontab.guru/#0_0_*_*_*
     schedule: "0 0 * * *"
 
     # Print out the deployments that should be expired and skip actual deletion
@@ -157,11 +157,26 @@ houston:
     # Enable cleanup CronJob
     enabled: true
 
-    # Default here is to run at midnight every night
+    # Default here is to run at midnight every night https://crontab.guru/#0_0_*_*_*
     schedule: "0 0 * * *"
 
     # Cleanup deployments older than this many days
     olderThan: 14
+
+    # Print out the deployments that should be cleaned up and skip actual cleanup
+    dryRun: false
+
+    # Only run on deployments marked as canary
+    canary: false
+
+  # Cleanup task usage data and task audit data in Houston
+  # This runs as a CronJob
+  cleanupTaskUsageData:
+    # Run at 23:40 every night
+    schedule: "40 23 * * *"  # https://crontab.guru/#40_23_*_*_*
+
+    # Cleanup deployments older than this many days
+    olderThan: 90
 
     # Print out the deployments that should be cleaned up and skip actual cleanup
     dryRun: false
@@ -178,7 +193,7 @@ houston:
     # url for update service
     url: https://updates.astronomer.io/astronomer-platform
 
-    # Default here is to run at midnight every night
+    # Default here is to run at midnight every night https://crontab.guru/#0_0_*_*_*
     schedule: "0 0 * * *"
 
   # Check for Airflow Updates
@@ -202,10 +217,24 @@ houston:
     # url for update service
     url: https://updates.astronomer.io/astronomer-runtime
 
-    # Default here is to run at 00:43 every night
+    # Default here is to run at 00:43 every night https://crontab.guru/#43_0_*_*_*
     schedule: "43 0 * * *"
-  # this option allows to override airflow releases config
 
+  # Populate daily task usage data
+  # This runs as a CronJob
+
+  populateDailyTaskMetrics:
+    # Default here is to run at 00:08 every night
+    schedule: "8 0 * * *"
+
+    # Print out the aggregated daily task usage data that should be inserted and skip actual insertion
+    dryRun: false
+
+  populateHourlyTaskAuditMetrics:
+    # Run at minute 57 every hour https://crontab.guru/#57_*_*_*_*
+    schedule: "57 * * * *"
+
+  # this option allows to override airflow releases config
   #
   airflowReleasesConfig:
     # example of usage:
