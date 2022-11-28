@@ -220,6 +220,7 @@ workflows:
 {%- endfor %}
           context:
             - slack_team-software-infra-bot
+            - github-repo
 
   build-and-release-helm-chart:
     unless:

@@ -299,6 +299,7 @@ workflows:
                 - quay.io/astronomer/ap-vector:0.24.1-1
           context:
             - slack_team-software-infra-bot
+            - github-repo
 
   build-and-release-helm-chart:
     unless:
