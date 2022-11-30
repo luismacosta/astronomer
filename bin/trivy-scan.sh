@@ -38,7 +38,7 @@ elif [ "${exit_code}" -gt 0 ]; then
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer $GITHUB_TOKEN" \
     https://api.github.com/repos/astronomer/astronomer/code-scanning/sarifs \
-    -d "{'commit_sha':'${git_commit_sha}','ref':'refs/heads/${git_branch}','sarif':'${sarif_base64}'}"
+    -d '{"commit_sha":'"${git_commit_sha}"',"ref":'"refs/heads/${git_branch}"',"sarif":'"${sarif_base64}"'}'
   set +o xtrace
 fi
 
