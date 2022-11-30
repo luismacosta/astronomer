@@ -18,10 +18,10 @@ trivy \
   --exit-code 1 \
   --no-progress \
   -f sarif \
-  "${scan_target}" > "${GIT_ROOT}/trivy-output.sarif"
+  "${scan_target}" > "${GIT_ROOT}/trivy-output.txt"
 exit_code=$?
 
-cat "${GIT_ROOT}/trivy-output.sarif"
+cat "${GIT_ROOT}/trivy-output.txt"
 
 # Trivy cannot detect vulnerabilities not installed by package managers (EG: busybox, buildroot, make install):
 # - https://github.com/aquasecurity/trivy/issues/481 2020-04-30
@@ -32,7 +32,7 @@ elif [ "${exit_code}" -gt 0 ]; then
   set -o xtrace
   echo "Publishing the Trivy scan result to Github Security - Code Scanning"
 
-  sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.sarif" | base64)
+  sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.txt" | base64 -w0)
   git_branch=$(git rev-parse --abbrev-ref HEAD)
   git_commit_sha=$(git rev-parse HEAD)
 
