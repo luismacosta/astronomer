@@ -38,8 +38,6 @@ jobs:
       - image: docker:{{ remote_docker_version }}-git
     shell: /bin/sh -leo pipefail
     parameters:
-      trivy_result_dir:
-        type: string
       docker_image:
         type: string
     environment:
