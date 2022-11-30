@@ -22,6 +22,8 @@ ci_remote_docker_version = "20.10.18"
 # https://circleci.com/developer/machine/image/ubuntu-2204
 machine_image_version = "ubuntu-2204:2022.10.2"
 
+trivy_scan_result_dir = "trivy_image_scan_results"
+
 
 def list_docker_images(path):
     command = f"cd {path} && helm template . -f tests/enable_all_features.yaml 2>/dev/null | awk '/image: / {{print $2}}' | sed 's/\"//g' | sort -u"
@@ -47,6 +49,7 @@ def main():
         docker_images=docker_images,
         machine_image_version=machine_image_version,
         remote_docker_version=ci_remote_docker_version,
+        trivy_scan_result_dir=trivy_scan_result_dir,
     )
     with open(config_path, "w") as circle_ci_config_file:
         warning_header = (

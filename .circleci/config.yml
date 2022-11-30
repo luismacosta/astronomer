@@ -22,9 +22,6 @@ jobs:
     docker:
       - image: docker:20.10.18-git
     shell: /bin/sh -leo pipefail
-    parameters:
-      trivy_result_dir:
-        type: string
     steps:
       - setup_remote_docker:
           version: 20.10.18
@@ -36,7 +33,7 @@ jobs:
           command: pip install sarif-tools
       - run:
           name: Run Trivy Scan Publish
-          command: bin/trivy-scan-publish.sh "<< parameters.trivy_result_dir >>"
+          command: bin/trivy-scan-publish.sh "trivy_image_scan_results"
 
   trivy-scan-docker:
     docker:
@@ -69,7 +66,7 @@ jobs:
             - trivy-cache-{{ checksum "date" }}
       - run:
           name: Scan the local image with trivy
-          command: bin/trivy-scan.sh "<< parameters.docker_image >>" ".circleci/trivyignore" "<< parameters.trivy_result_dir >>"
+          command: bin/trivy-scan.sh "<< parameters.docker_image >>" ".circleci/trivyignore" "trivy_image_scan_results"
       - run:
           name: Slack Init
           command: |
@@ -87,7 +84,7 @@ jobs:
       - persist_to_workspace:
           root: "."
           paths:
-            - "<< parameters.trivy_result_dir >>"
+            - "trivy_image_scan_results"
 
   run_pre_commit:
     docker:
@@ -287,7 +284,6 @@ workflows:
         - << pipeline.parameters.scan-docker-images >>
     jobs:
       - trivy-scan-docker:
-          trivy_result_dir: trivy_image_scan_results
           matrix:
             parameters:
               docker_image:
@@ -328,7 +324,6 @@ workflows:
             - slack_team-software-infra-bot
             - github-repo
       - trivy-publish:
-          trivy_result_dir: trivy_image_scan_results
           requires:
             - trivy-scan-docker
           context:
