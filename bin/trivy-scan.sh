@@ -29,7 +29,6 @@ if grep -q -i 'OS is not detected' trivy-output.txt ; then
   echo "Skipping trivy scan because of unsupported OS"
   exit 0
 elif [ "${exit_code}" -gt 0 ]; then
-  set -o xtrace
   echo "Publishing the Trivy scan result to Github Security - Code Scanning"
 
   sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.txt" | base64 -w0)
@@ -41,8 +40,6 @@ elif [ "${exit_code}" -gt 0 ]; then
     -H "Authorization: Bearer $GITHUB_TOKEN" \
     https://api.github.com/repos/astronomer/astronomer/code-scanning/sarifs \
     -d '{"commit_sha":'"\"${git_commit_sha}\""',"ref":'"\"refs/heads/${git_branch}\""',"sarif":'"\"${sarif_base64}\""'}'
-
-  set +o xtrace
 fi
 
 exit "${exit_code}"
