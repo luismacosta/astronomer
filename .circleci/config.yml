@@ -64,7 +64,9 @@ jobs:
             - trivy-cache-{{ checksum "date" }}
       - run:
           name: Scan the local image with trivy
-          command: bin/trivy-scan.sh "<< parameters.docker_image >>" ".circleci/trivyignore" "trivy_image_scan_results"
+          command: |
+            mkdir -p trivy_image_scan_results
+            bin/trivy-scan.sh "<< parameters.docker_image >>" ".circleci/trivyignore" "trivy_image_scan_results"
       - run:
           name: Slack Init
           command: |
