@@ -238,10 +238,9 @@ workflows:
         - << pipeline.parameters.scan-docker-images >>
     jobs:
       - trivy-scan-docker:
+          trivy_result_dir: trivy_image_scan_results
           matrix:
             parameters:
-              trivy_result_dir:
-                - trivy_image_scan_results
               docker_image:
 {%- for image in docker_images %}
                 - {{ image }}
