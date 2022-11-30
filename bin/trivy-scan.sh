@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-[ "$#" == 2 ] || { echo "ERROR: Must give exactly two arguments: <image_to_scan> <ignore_file>" ; exit 1 ; }
+[ "$#" == 3 ] || { echo "ERROR: Must give exactly two arguments: <image_to_scan> <ignore_file> <trivy_image_scan_result_dir>" ; exit 1 ; }
 [ -f /etc/os-release ] && cat /etc/os-release
 
 GIT_ROOT="$(git -C "${0%/*}" rev-parse --show-toplevel)"
 scan_target="$1"
 ignore_file="$2"
+trivy_result_dir="$3"
 
 set +exo pipefail
 
@@ -29,17 +30,8 @@ if grep -q -i 'OS is not detected' trivy-output.txt ; then
   echo "Skipping trivy scan because of unsupported OS"
   exit 0
 elif [ "${exit_code}" -gt 0 ]; then
-  echo "Publishing the Trivy scan result to Github Security - Code Scanning"
-
-  sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.txt" | base64 -w0)
-  git_branch=$(git rev-parse --abbrev-ref HEAD)
-  git_commit_sha=$(git rev-parse HEAD)
-
-  curl -X POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer $GITHUB_TOKEN" \
-    https://api.github.com/repos/astronomer/astronomer/code-scanning/sarifs \
-    -d '{"commit_sha":'"\"${git_commit_sha}\""',"ref":'"\"refs/heads/${git_branch}\""',"sarif":'"\"${sarif_base64}\""'}'
+  echo "Storing code scanning result"
+  mv "${GIT_ROOT}/trivy-output.txt" "${GIT_ROOT}/${trivy_result_dir}/trivy-output-${scan_target}.sarif"
 fi
 
 exit "${exit_code}"
