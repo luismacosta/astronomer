@@ -329,8 +329,7 @@ workflows:
             - slack_team-software-infra-bot
             - github-repo
       - trivy-publish:
-          parameters:
-            trivy_result_dir: trivy_image_scan_results
+          trivy_result_dir: trivy_image_scan_results
           requires:
             - trivy-scan-docker
           context:
