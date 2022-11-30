@@ -31,7 +31,7 @@ if grep -q -i 'OS is not detected' trivy-output.txt ; then
   exit 0
 elif [ "${exit_code}" -gt 0 ]; then
   echo "Storing code scanning result"
-  mv "${GIT_ROOT}/trivy-output.txt" "${GIT_ROOT}/${trivy_result_dir}/trivy-output-${scan_target}.sarif"
+  cp "${GIT_ROOT}/trivy-output.txt" "${GIT_ROOT}/${trivy_result_dir}/trivy-output-${scan_target}.sarif"
   exit 0
 fi
 

@@ -18,7 +18,7 @@ parameters:
 jobs:
   trivy-publish:
     docker:
-      - image: docker:{{ remote_docker_version }}-git
+      - image: cimg/python:3.11.0
     shell: /bin/sh -leo pipefail
     steps:
       - setup_remote_docker:
