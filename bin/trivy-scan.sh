@@ -30,14 +30,15 @@ if grep -q -i 'OS is not detected' trivy-output.txt ; then
   exit 0
 elif [ "${exit_code}" -gt 0 ]; then
   echo "Publishing the Trivy scan result to Github Security - Code Scanning"
-  sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.txt" | base64)
+  sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.txt" | base64 -w0)
+  git_branch=$(git rev-parse --abbrev-ref HEAD)
   git_commit_sha=$(git rev-parse HEAD)
   curl \
     -X POST \
     -H "Accept: application/vnd.github+json" \
     -H "Authorization: Bearer $GITHUB_TOKEN" \
     https://api.github.com/repos/astronomer/astronomer/code-scanning/sarifs \
-    -d "{'commit_sha':'${git_commit_sha}','ref':'refs/heads/master','sarif':'${sarif_base64}'}"
+    -d "{'commit_sha':'${git_commit_sha}','ref':'refs/heads/${git_branch}','sarif':'${sarif_base64}'}"
 fi
 
 exit "${exit_code}"
