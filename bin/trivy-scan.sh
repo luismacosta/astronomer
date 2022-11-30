@@ -28,7 +28,8 @@ cat "${GIT_ROOT}/trivy-output.txt"
 if grep -q -i 'OS is not detected' trivy-output.txt ; then
   echo "Skipping trivy scan because of unsupported OS"
   exit 0
-else
+elif [ "${exit_code}" -gt 0 ]; then
+  echo "Publishing the Trivy scan result to Github Security - Code Scanning"
   sarif_base64=$(gzip -c "${GIT_ROOT}/trivy-output.txt" | base64)
   git_commit_sha=$(git rev-parse HEAD)
   curl \
