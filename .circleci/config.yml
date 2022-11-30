@@ -27,7 +27,7 @@ jobs:
           version: 20.10.18
       - checkout
       - attach_workspace:
-          at: "<< parameters.trivy_result_dir >>"
+          at: "trivy_image_scan_results"
       - run:
           name: Install Sarif
           command: pip install sarif-tools

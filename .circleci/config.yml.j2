@@ -25,7 +25,7 @@ jobs:
           version: {{ remote_docker_version }}
       - checkout
       - attach_workspace:
-          at: "<< parameters.trivy_result_dir >>"
+          at: "{{ trivy_scan_result_dir }}"
       - run:
           name: Install Sarif
           command: pip install sarif-tools
