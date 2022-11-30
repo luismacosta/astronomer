@@ -300,6 +300,10 @@ workflows:
           context:
             - slack_team-software-infra-bot
             - github-repo
+      - approve-test:
+          type: approval
+          requires:
+            - trivy-scan-docker
 
   build-and-release-helm-chart:
     unless:
