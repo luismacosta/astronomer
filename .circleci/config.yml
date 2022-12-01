@@ -10,6 +10,7 @@ executors:
 
 orbs:
   slack: circleci/slack@4.10.1
+  python: circleci/python@2.1.1
 
 parameters:
   scan-docker-images:
@@ -28,9 +29,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: "trivy_image_scan_results"
-      - run:
-          name: Install Sarif
-          command: pip install sarif-tools
+      - python/install-packages:
+          args: sarif-tools
+          pkg-manager: pip
       - run:
           name: Run Trivy Scan Publish
           command: bin/trivy-scan-publish.sh "trivy_image_scan_results"
