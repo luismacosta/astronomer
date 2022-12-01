@@ -222,8 +222,6 @@ workflows:
 {%- for image in docker_images %}
                 - {{ image }}
 {%- endfor %}
-          context:
-            - slack_team-software-infra-bot
       - trivy-publish:
           requires:
             - trivy-scan-docker

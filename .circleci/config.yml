@@ -301,8 +301,6 @@ workflows:
                 - quay.io/astronomer/ap-prometheus:2.37.3
                 - quay.io/astronomer/ap-registry:3.16.2-4
                 - quay.io/astronomer/ap-vector:0.24.1-1
-          context:
-            - slack_team-software-infra-bot
       - trivy-publish:
           requires:
             - trivy-scan-docker
