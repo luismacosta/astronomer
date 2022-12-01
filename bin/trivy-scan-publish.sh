@@ -16,7 +16,6 @@ DATE_STR=$(date -u +"%Y-%m-%d")
 trivy_result_dir="$1"
 
 set +exo pipefail
-set -o xtrace
 
 echo "Merging scan results to single file"
 sarif copy --output "${GIT_ROOT}/final.sarif" "${GIT_ROOT}/${trivy_result_dir}"
