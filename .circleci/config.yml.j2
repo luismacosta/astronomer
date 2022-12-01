@@ -242,7 +242,6 @@ workflows:
 {%- endfor %}
           context:
             - slack_team-software-infra-bot
-            - github-repo
       - trivy-publish:
           requires:
             - trivy-scan-docker

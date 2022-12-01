@@ -26,4 +26,8 @@ curl -X POST \
   https://api.github.com/repos/astronomer/astronomer/code-scanning/sarifs \
   -d '{"commit_sha":'"\"${GIT_COMMIT_SHA}\""',"ref":'"\"refs/heads/${GIT_BRANCH}\""',"started_at":'"\"${TIMESTAMP}\""',"sarif":'"\"${sarif_base64}\""'}'
 
+sarif csv --output "${GIT_ROOT}/report.csv" "${GIT_ROOT}/final.sarif"
+
+curl -F file=@"${GIT_ROOT}/final.sarif" -F "initial_comment=Example upload" -F channels=C03HS1H9G1E -H "Authorization: Bearer $SLACK_ACCESS_TOKEN" https://slack.com/api/files.upload
+
 exit $?
