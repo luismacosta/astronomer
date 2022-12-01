@@ -28,11 +28,9 @@ cat "${GIT_ROOT}/trivy-output.txt"
 # - https://github.com/aquasecurity/trivy/issues/481 2020-04-30
 if grep -q -i 'OS is not detected' trivy-output.txt ; then
   echo "Skipping trivy scan because of unsupported OS"
-  exit 0
 elif [ "${exit_code}" -gt 0 ]; then
   echo "Storing code scanning result"
   cp "${GIT_ROOT}/trivy-output.txt" "${GIT_ROOT}/${trivy_result_dir}/trivy-output-$CIRCLE_BUILD_NUM.sarif"
-  exit 0
 fi
 
-exit "${exit_code}"
+exit 0
