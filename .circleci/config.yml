@@ -10,7 +10,6 @@ executors:
 
 orbs:
   slack: circleci/slack@4.10.1
-  python: circleci/python@2.1.1
 
 parameters:
   scan-docker-images:
@@ -22,7 +21,6 @@ jobs:
   trivy-publish:
     docker:
       - image: cimg/python:3.11.0
-    shell: /bin/sh -leo pipefail
     steps:
       - setup_remote_docker:
           version: 20.10.18
