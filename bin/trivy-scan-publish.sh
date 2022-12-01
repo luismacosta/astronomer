@@ -9,7 +9,7 @@
 GIT_ROOT="$(git -C "${0%/*}" rev-parse --show-toplevel)"
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GIT_COMMIT_SHA=$(git rev-parse HEAD)
-TIMESTAMP=$(date +"%Y-%m-%dT%H:%M:%S%z")
+TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 trivy_result_dir="$1"
 
