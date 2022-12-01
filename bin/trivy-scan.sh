@@ -18,7 +18,7 @@ trivy \
   --ignore-unfixed \
   --exit-code 1 \
   --no-progress \
-  -f sarif \
+  --format sarif \
   "${scan_target}" > "${GIT_ROOT}/trivy-output.txt"
 exit_code=$?
 
