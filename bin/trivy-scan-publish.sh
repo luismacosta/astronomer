@@ -9,6 +9,7 @@
 GIT_ROOT="$(git -C "${0%/*}" rev-parse --show-toplevel)"
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 GIT_COMMIT_SHA=$(git rev-parse HEAD)
+TIMESTAMP=$(date +"%Y-%m-%dT%H:%M:%S%z")
 
 trivy_result_dir="$1"
 
@@ -23,6 +24,6 @@ curl -X POST \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: Bearer $GITHUB_TOKEN" \
   https://api.github.com/repos/astronomer/astronomer/code-scanning/sarifs \
-  -d '{"commit_sha":'"\"${GIT_COMMIT_SHA}\""',"ref":'"\"refs/heads/${GIT_BRANCH}\""',"sarif":'"\"${sarif_base64}\""'}'
+  -d '{"commit_sha":'"\"${GIT_COMMIT_SHA}\""',"ref":'"\"refs/heads/${GIT_BRANCH}\""',"started_at":'"\"${TIMESTAMP}\""',"sarif":'"\"${sarif_base64}\""'}'
 
 exit $?
